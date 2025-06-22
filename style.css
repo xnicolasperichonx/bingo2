@@ -11,8 +11,7 @@
 html, body {
   margin: 0;
   padding: 0;
-  min-height: 100%; /* Cambiado de height: 100% a min-height: 100% */
-  /* Eliminado: overflow: hidden; */
+  min-height: 100%;
 }
 
 body {
@@ -53,6 +52,7 @@ body {
   align-items: center;
   gap: 1rem;
   width: 100%;
+  margin-bottom: 1rem;
 }
 
 .color-selector {
@@ -79,11 +79,12 @@ body {
 
 .refresh-button {
   padding: 0.5rem;
+  padding-top: 0.6rem; /* Aumentado ligeramente para "bajar" el icono unicode */
   background-color: white;
   color: var(--primary-color);
   border: 2px solid #fff;
   border-radius: 50%;
-  font-size: 1.5rem;
+  font-size: 1.5rem; /* Este font-size ahora controla el tamaño del icono unicode */
   cursor: pointer;
   transition: background-color 0.2s, color 0.2s, border-color 0.2s;
   width: 45px;
@@ -91,7 +92,7 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-  line-height: 1;
+  line-height: 1; /* Mantenemos line-height en 1 para evitar espaciado extra del texto */
   flex-shrink: 0;
 }
 
@@ -101,6 +102,20 @@ body {
   border-color: var(--primary-color);
 }
 
+/* ELIMINADAS las reglas para .refresh-icon, ya no se usa SVG */
+/* .refresh-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  fill: var(--primary-color);
+  transition: fill 0.2s;
+}
+
+.refresh-button:hover .refresh-icon {
+  fill: var(--primary-color);
+} */
+
+
 .main-content {
   flex-grow: 1;
   display: flex;
@@ -108,14 +123,7 @@ body {
   align-items: flex-start;
   padding: 0;
   box-sizing: border-box;
-  overflow: hidden; /* Esto controla el desbordamiento dentro del main-content */
-
-  /* Eliminadas propiedades de posicionamiento fijo para desktop, ya que el body lo controla */
-  /* position: fixed; */
-  /* top: 0; */
-  /* left: var(--menu-width); */
-  /* width: calc(100% - var(--menu-width)); */
-  /* height: 100vh; */
+  overflow: hidden;
   z-index: 1;
 }
 
@@ -151,21 +159,19 @@ body {
   width: 100%;
   padding-bottom: 100%;
 
-  font-size: calc(1rem + 1vw);
-  max-font-size: 2rem;
-  min-font-size: 0.8rem;
-
   transition: background-color 0.2s, color 0.2s, transform 0.2s ease-out;
   transform: scale(1);
 }
 
 .cell span {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  font-size: 5.5vw;
+  max-font-size: 2.5rem;
+  min-font-size: 1.1rem;
   line-height: 1;
+  white-space: nowrap;
+  padding: 0.1rem;
 }
+
 
 .cell.marked {
   background-color: var(--primary-color);
@@ -199,26 +205,109 @@ body {
 }
 
 
+/* --- Estilos para el Modal de Confirmación Personalizado --- */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s;
+}
+
+.modal-overlay.visible {
+  visibility: visible;
+  opacity: 1;
+}
+
+.modal-content {
+  background-color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: center;
+  max-width: 400px;
+  width: 90%;
+  transform: translateY(-20px);
+  transition: transform 0.3s ease-out;
+}
+
+.modal-overlay.visible .modal-content {
+  transform: translateY(0);
+}
+
+.modal-content h2 {
+  margin-top: 0;
+  color: var(--primary-color);
+  font-size: 1.5rem;
+}
+
+.modal-content p {
+  margin-bottom: 1.5rem;
+  font-size: 1rem;
+  color: #333;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.modal-buttons button {
+  padding: 0.8rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+#modalConfirmYes {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+#modalConfirmYes:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+#modalConfirmNo {
+  background-color: #ccc;
+  color: #333;
+}
+
+#modalConfirmNo:hover {
+  background-color: #bbb;
+  transform: translateY(-2px);
+}
+
+
 /* Media Queries para Responsive */
 @media (max-width: 768px) { /* Para tablets y móviles */
   body {
-    flex-direction: column; /* Apila el menú y el contenido en columnas */
-    align-items: center; /* Centra el contenido horizontalmente */
-    /* min-height: auto; ya no es necesario aquí, lo maneja el body general */
+    flex-direction: column;
+    align-items: center;
   }
 
   .left-menu {
-    width: 100%; /* El menú ocupa todo el ancho */
-    flex-direction: row; /* Los controles del menú se ponen en fila */
-    justify-content: space-around; /* Distribuye el espacio entre ellos */
+    width: 100%;
+    flex-direction: row;
+    justify-content: space-around;
     padding: 0.8rem;
     box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-    /* Eliminado: position: fixed; */
-    /* Eliminado: top: 0; */
-    /* Eliminado: left: 0; */
     z-index: 10;
-    height: var(--mobile-menu-height); /* Altura fija para el menú móvil */
-    margin-bottom: 0.5rem; /* Margen para separar del contenido principal */
+    height: var(--mobile-menu-height);
+    margin-bottom: 1rem;
   }
 
   .left-menu h1 {
@@ -227,46 +316,43 @@ body {
   }
 
   .menu-controls {
-    flex-direction: row; /* Controles en fila */
+    flex-direction: row;
     gap: 0.8rem;
     width: auto;
+    margin-bottom: 0;
   }
 
   .color-selector .color {
-    width: 1.8rem; /* Iconos de color más pequeños en móvil */
+    width: 1.8rem;
     height: 1.8rem;
   }
 
   .refresh-button {
-    font-size: 1.2rem;
+    font-size: 1.2rem; /* El font-size se mantiene para controlar el tamaño del unicode en móvil */
     width: 35px;
     height: 35px;
   }
 
   .main-content {
     flex-grow: 1;
-    width: 100%; /* Ocupa todo el ancho */
-    /* Eliminado: height: calc(100vh - var(--mobile-menu-height)); */
-    /* Eliminado: position: fixed; */
-    /* Eliminado: top: var(--mobile-menu-height); */
-    /* Eliminado: left: 0; */
-    padding: 0.5rem; /* Pequeño padding alrededor del cartón */
+    width: 100%;
+    padding: 0.5rem;
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    overflow: auto; /* Permite desplazamiento si el cartón es demasiado grande */
+    overflow: auto;
   }
 
   .bingo-card {
-    width: calc(100% - 1rem); /* Ajusta el ancho con padding */
-    margin: 0 auto; /* Centra el cartón */
-    max-height: none; /* Cambiado a none para permitir crecimiento */
-    height: auto; /* Deja que la relación de aspecto determine la altura */
-    margin-top: 0.5rem; /* Un pequeño margen para que no esté totalmente pegado */
+    width: calc(100% - 1rem);
+    margin: 0 auto;
+    max-height: none;
+    height: auto;
+    margin-top: 0.5rem;
   }
 
-  .cell {
-    font-size: 6vw; /* Ajusta el tamaño de la fuente para móviles */
+  .cell span {
+    font-size: 6.5vw;
   }
 }
 
@@ -283,7 +369,6 @@ body {
     width: 30px;
     height: 30px;
   }
-  /* Reduce un poco la altura del menú en teléfonos muy pequeños */
   :root {
       --mobile-menu-height: 70px;
   }
