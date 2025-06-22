@@ -1,0 +1,21 @@
+{
+  "name": "Cartón de Bingo",
+  "short_name": "Bingo",
+  "description": "Tu cartón de Bingo interactivo",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#f0f0f0",
+  "theme_color": "#ff6600",
+  "icons": [
+    {
+      "src": "/icons/icon-192x192.png.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icons/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

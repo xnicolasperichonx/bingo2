@@ -1,0 +1,290 @@
+:root {
+  --primary-color: #ff6600; /* Default primary color */
+  --secondary-color: #ff9933; /* Default secondary color */
+  --background-cell-color: #fff4dc; /* Default background for number cells */
+  --menu-bg-color: #000000; /* Menu background color (black) */
+  --menu-text-color: #ffffff; /* Menu text color (white) */
+  --menu-width: 100px; /* Ancho del menú lateral para desktop */
+  --mobile-menu-height: 80px; /* Altura del menú en modo móvil */
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%; /* Cambiado de height: 100% a min-height: 100% */
+  /* Eliminado: overflow: hidden; */
+}
+
+body {
+  font-family: sans-serif;
+  background-color: #f0f0f0;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
+.left-menu {
+  width: var(--menu-width);
+  background-color: var(--menu-bg-color);
+  color: var(--menu-text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 1rem 0.5rem;
+  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2);
+  flex-shrink: 0;
+  overflow-y: auto;
+}
+
+.left-menu h1 {
+  font-size: 1.2rem;
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  text-align: center;
+  line-height: 1.3;
+}
+
+.menu-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.color-selector {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.color-selector .color {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 3px solid #fff;
+  transition: border-color 0.2s, transform 0.2s;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.color-selector .color:hover {
+  border-color: var(--primary-color);
+  transform: scale(1.05);
+}
+
+.refresh-button {
+  padding: 0.5rem;
+  background-color: white;
+  color: var(--primary-color);
+  border: 2px solid #fff;
+  border-radius: 50%;
+  font-size: 1.5rem;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.refresh-button:hover {
+  background-color: #fff;
+  color: var(--primary-color);
+  border-color: var(--primary-color);
+}
+
+.main-content {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0;
+  box-sizing: border-box;
+  overflow: hidden; /* Esto controla el desbordamiento dentro del main-content */
+
+  /* Eliminadas propiedades de posicionamiento fijo para desktop, ya que el body lo controla */
+  /* position: fixed; */
+  /* top: 0; */
+  /* left: var(--menu-width); */
+  /* width: calc(100% - var(--menu-width)); */
+  /* height: 100vh; */
+  z-index: 1;
+}
+
+.bingo-card {
+  display: grid;
+  grid-template-columns: repeat(9, 1fr);
+  gap: 3px;
+  width: calc(100% - 2rem);
+  max-width: 900px;
+  background-color: #ccc;
+  border: 2px solid #aaa;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  aspect-ratio: 9 / 3;
+  margin-top: 1rem;
+
+  transition: transform 0.5s ease-in-out, box-shadow 0.5s ease-in-out;
+}
+
+.cell {
+  background-color: var(--background-cell-color);
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-weight: bold;
+  color: var(--primary-color);
+  user-select: none;
+  cursor: pointer;
+  box-sizing: border-box;
+
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+
+  font-size: calc(1rem + 1vw);
+  max-font-size: 2rem;
+  min-font-size: 0.8rem;
+
+  transition: background-color 0.2s, color 0.2s, transform 0.2s ease-out;
+  transform: scale(1);
+}
+
+.cell span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  line-height: 1;
+}
+
+.cell.marked {
+  background-color: var(--primary-color);
+  color: white;
+  transform: scale(1.05);
+}
+
+.cell.empty {
+  background-color: #e0e0e0;
+  border: 1px solid #ccc;
+  cursor: default;
+}
+
+@keyframes bingoShake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.bingo-card.bingo-won {
+  animation: bingoShake 0.5s ease-in-out 3;
+  box-shadow: 0 0 20px 10px var(--primary-color);
+}
+
+
+/* Media Queries para Responsive */
+@media (max-width: 768px) { /* Para tablets y móviles */
+  body {
+    flex-direction: column; /* Apila el menú y el contenido en columnas */
+    align-items: center; /* Centra el contenido horizontalmente */
+    /* min-height: auto; ya no es necesario aquí, lo maneja el body general */
+  }
+
+  .left-menu {
+    width: 100%; /* El menú ocupa todo el ancho */
+    flex-direction: row; /* Los controles del menú se ponen en fila */
+    justify-content: space-around; /* Distribuye el espacio entre ellos */
+    padding: 0.8rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    /* Eliminado: position: fixed; */
+    /* Eliminado: top: 0; */
+    /* Eliminado: left: 0; */
+    z-index: 10;
+    height: var(--mobile-menu-height); /* Altura fija para el menú móvil */
+    margin-bottom: 0.5rem; /* Margen para separar del contenido principal */
+  }
+
+  .left-menu h1 {
+    font-size: 1.1rem;
+    margin: 0;
+  }
+
+  .menu-controls {
+    flex-direction: row; /* Controles en fila */
+    gap: 0.8rem;
+    width: auto;
+  }
+
+  .color-selector .color {
+    width: 1.8rem; /* Iconos de color más pequeños en móvil */
+    height: 1.8rem;
+  }
+
+  .refresh-button {
+    font-size: 1.2rem;
+    width: 35px;
+    height: 35px;
+  }
+
+  .main-content {
+    flex-grow: 1;
+    width: 100%; /* Ocupa todo el ancho */
+    /* Eliminado: height: calc(100vh - var(--mobile-menu-height)); */
+    /* Eliminado: position: fixed; */
+    /* Eliminado: top: var(--mobile-menu-height); */
+    /* Eliminado: left: 0; */
+    padding: 0.5rem; /* Pequeño padding alrededor del cartón */
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    overflow: auto; /* Permite desplazamiento si el cartón es demasiado grande */
+  }
+
+  .bingo-card {
+    width: calc(100% - 1rem); /* Ajusta el ancho con padding */
+    margin: 0 auto; /* Centra el cartón */
+    max-height: none; /* Cambiado a none para permitir crecimiento */
+    height: auto; /* Deja que la relación de aspecto determine la altura */
+    margin-top: 0.5rem; /* Un pequeño margen para que no esté totalmente pegado */
+  }
+
+  .cell {
+    font-size: 6vw; /* Ajusta el tamaño de la fuente para móviles */
+  }
+}
+
+@media (max-width: 480px) { /* Ajustes para teléfonos más pequeños */
+  .left-menu h1 {
+    font-size: 1rem;
+  }
+  .color-selector .color {
+    width: 1.6rem;
+    height: 1.6rem;
+  }
+  .refresh-button {
+    font-size: 1rem;
+    width: 30px;
+    height: 30px;
+  }
+  /* Reduce un poco la altura del menú en teléfonos muy pequeños */
+  :root {
+      --mobile-menu-height: 70px;
+  }
+}
